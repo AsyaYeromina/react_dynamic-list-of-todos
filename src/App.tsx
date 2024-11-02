@@ -14,16 +14,16 @@ import { Loader } from './components/Loader';
 
 export const App: React.FC = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
-  const [filteredTodos, setFilteredTodos] = useState<Todo[]>([]);
   const [selectedTodo, setSelectedTodo] = useState<Todo | null>(null);
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [todosLoading, setTodoLoading] = useState(true);
+  const [selectedStatus, setSelectedStatus] = useState<FilterStatus>('all');
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     getTodos()
       .then(fetchedTodos => {
         setTodos(fetchedTodos);
-        setFilteredTodos(fetchedTodos);
       })
       .catch(error => {
         /* eslint-disable-next-line no-console */
@@ -34,28 +34,23 @@ export const App: React.FC = () => {
       });
   }, []);
 
-  const filterList = (status: FilterStatus, query: string) => {
-    const preparedTodos = todos.filter((todo: Todo) => {
-      const matchesStatus =
-        status === 'all' ||
-        (status === 'active' && !todo.completed) ||
-        (status === 'completed' && todo.completed);
+  const filteredTodos = todos.filter((todo: Todo) => {
+    const matchesStatus =
+      selectedStatus === 'all' ||
+      (selectedStatus === 'active' && !todo.completed) ||
+      (selectedStatus === 'completed' && todo.completed);
 
-      const matchesTitle = todo.title
-        .trim()
-        .toLowerCase()
-        .includes(query.trim().toLowerCase());
+    const matchesTitle = todo.title
+      .trim()
+      .toLowerCase()
+      .includes(searchQuery.trim().toLowerCase());
 
-      return matchesStatus && matchesTitle;
-    });
-
-    return preparedTodos;
-  };
+    return matchesStatus && matchesTitle;
+  });
 
   const handleFilterChange = (status: FilterStatus, query: string) => {
-    const newFilteredTodos = filterList(status, query);
-
-    setFilteredTodos(newFilteredTodos);
+    setSelectedStatus(status);
+    setSearchQuery(query);
   };
 
   const handleTodoSelection = (todo: Todo) => {
@@ -83,7 +78,11 @@ export const App: React.FC = () => {
             <h1 className="title">Todos:</h1>
 
             <div className="block">
-              <TodoFilter onFilterChange={handleFilterChange} />
+              <TodoFilter
+                onFilterChange={handleFilterChange}
+                selectedStatus={selectedStatus}
+                searchQuery={searchQuery}
+              />
             </div>
 
             <div className="block">

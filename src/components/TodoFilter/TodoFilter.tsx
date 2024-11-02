@@ -1,34 +1,25 @@
-import { useState } from 'react';
 import { FilterStatus } from '../../types/FilterStatus';
 
 interface TodoFilterProps {
   onFilterChange: (status: FilterStatus, query: string) => void;
+  selectedStatus: FilterStatus;
+  searchQuery: string;
 }
 
-export const TodoFilter: React.FC<TodoFilterProps> = ({ onFilterChange }) => {
-  const [selectedStatus, setSelectedStatus] = useState<FilterStatus>('all');
-  const [searchQuery, setSearchQuery] = useState('');
-
+export const TodoFilter: React.FC<TodoFilterProps> = ({
+  onFilterChange,
+  selectedStatus,
+  searchQuery,
+}) => {
   const handleStatusChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const newStatus = event.target.value as FilterStatus;
-
-    if (newStatus !== selectedStatus) {
-      setSelectedStatus(newStatus);
-      onFilterChange(newStatus, searchQuery);
-    }
+    onFilterChange(event.target.value as FilterStatus, searchQuery);
   };
 
   const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newQuery = event.target.value;
-
-    if (newQuery !== searchQuery) {
-      setSearchQuery(newQuery);
-      onFilterChange(selectedStatus, newQuery);
-    }
+    onFilterChange(selectedStatus, event.target.value);
   };
 
   const handleClearQuery = () => {
-    setSearchQuery('');
     onFilterChange(selectedStatus, '');
   };
 
