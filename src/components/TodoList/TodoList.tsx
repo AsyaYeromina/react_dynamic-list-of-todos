@@ -60,6 +60,7 @@ export const TodoList: React.FC<Props> = ({
                 data-cy="selectButton"
                 className="button"
                 type="button"
+                aria-label="Select this todo"
                 onClick={() => {
                   onTodoSelect(todo);
                 }}

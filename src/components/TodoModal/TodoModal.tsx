@@ -31,6 +31,7 @@ export const TodoModal: React.FC<Props> = ({ onTodoClear, todo, user }) => {
               type="button"
               className="delete"
               data-cy="modal-close"
+              aria-label="Close the current todo card"
               onClick={() => onTodoClear()}
             />
           </header>
