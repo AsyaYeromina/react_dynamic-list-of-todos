@@ -25,6 +25,10 @@ export const App: React.FC = () => {
         setTodos(fetchedTodos);
         setFilteredTodos(fetchedTodos);
       })
+      .catch(error => {
+        /* eslint-disable-next-line no-console */
+        console.log('Error fetching todos:', error);
+      })
       .finally(() => {
         setTodoLoading(false);
       });
@@ -56,9 +60,14 @@ export const App: React.FC = () => {
 
   const handleTodoSelection = (todo: Todo) => {
     setSelectedTodo(todo);
-    getUser(todo.userId).then(user => {
-      setCurrentUser(user);
-    });
+    getUser(todo.userId)
+      .then(user => {
+        setCurrentUser(user);
+      })
+      .catch(error => {
+        /* eslint-disable-next-line no-console */
+        console.log('Error fetching todos:', error);
+      });
   };
 
   const handleTodoClear = () => {
